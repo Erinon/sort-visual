@@ -5,6 +5,7 @@ import { insertionSortSteps } from '../SortingAlgorithms/InsertionSort'
 import { selectionSortSteps } from '../SortingAlgorithms/SelectionSort'
 import { shellSortSteps } from '../SortingAlgorithms/ShellSort'
 import { mergeSortSteps } from '../SortingAlgorithms/MergeSort'
+import { quickSortSteps, iterativeQuickSortSteps } from '../SortingAlgorithms/QuickSort'
 
 class SortingVisualizer extends React.Component {
     constructor(props) {
@@ -100,6 +101,8 @@ class SortingVisualizer extends React.Component {
                 <button onClick={() => this.sortAnim(selectionSortSteps(this.state.arr))}>Selection Sort</button>
                 <button onClick={() => this.sortAnim(shellSortSteps(this.state.arr))}>Shell Sort</button>
                 <button onClick={() => this.sortAnim(mergeSortSteps(this.state.arr))}>Merge Sort</button>
+                <button onClick={() => this.sortAnim(quickSortSteps(this.state.arr))}>Quick Sort</button>
+                <button onClick={() => this.sortAnim(iterativeQuickSortSteps(this.state.arr))}>Iterative Quick Sort</button>
             </div>
         )
     }
