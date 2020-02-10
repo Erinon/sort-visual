@@ -1,7 +1,10 @@
 import React from 'react'
 import './SortingVisualizer.css'
-import { bubbleSortSteps } from '../SortingAlgorithms/SortingAlgorithms'
-import { swap } from '../utils/utils'
+import { bubbleSortSteps } from '../SortingAlgorithms/BubbleSort'
+import { insertionSortSteps } from '../SortingAlgorithms/InsertionSort'
+import { selectionSortSteps } from '../SortingAlgorithms/SelectionSort'
+import { shellSortSteps } from '../SortingAlgorithms/ShellSort'
+import { mergeSortSteps } from '../SortingAlgorithms/MergeSort'
 
 class SortingVisualizer extends React.Component {
     constructor(props) {
@@ -39,44 +42,44 @@ class SortingVisualizer extends React.Component {
         return arr
     }
 
-    bubbleSortAnim() {
+    sortAnim(steps) {
         const {arr} = this.state
         const arrBars = document.getElementsByClassName('arr-bar')
-        const steps = bubbleSortSteps(this.state.arr)
         var iCol, jCol, cnt = 0
+
+        console.log(`${steps.length} steps`)
         
         steps.forEach(s => {
             const [i, j, c] = s
-            
-            ++cnt;
-            setTimeout(() => {
-                if (arr[i] > arr[j]) {
-                    iCol = 'green'
-                    jCol = 'red'
-                } else {
-                    iCol = 'red'
-                    jCol = 'green'
-                }
-
-                arrBars[i].style.backgroundColor = iCol
-                arrBars[j].style.backgroundColor = jCol
-            }, cnt * 10)
 
             if (c) {
-                    ++cnt;
+                ++cnt;
                 setTimeout(() => {
-                    swap(arr, i, j)
+                    arr[i] = j
 
-                    arrBars[i].style.height = `${arr[i]}%`
-                    arrBars[j].style.height = `${arr[j]}%`
-                }, cnt * 10)
+                    arrBars[i].style.height = `${j}%`
+                }, cnt * 1)
+            } else {
+                ++cnt;
+                setTimeout(() => {
+                    if (arr[i] > arr[j]) {
+                        iCol = 'green'
+                        jCol = 'red'
+                    } else {
+                        iCol = 'red'
+                        jCol = 'green'
+                    }
+    
+                    arrBars[i].style.backgroundColor = iCol
+                    arrBars[j].style.backgroundColor = jCol
+                }, cnt * 1)
+
+                ++cnt;
+                setTimeout(() => {
+                    arrBars[i].style.backgroundColor = 'pink'
+                    arrBars[j].style.backgroundColor = 'pink'
+                }, cnt * 1)
             }
-
-            ++cnt;
-            setTimeout(() => {
-                arrBars[i].style.backgroundColor = 'pink'
-                arrBars[j].style.backgroundColor = 'pink'
-            }, cnt * 10)
         })
     }
 
@@ -92,7 +95,11 @@ class SortingVisualizer extends React.Component {
                 </div>
                 
                 <button onClick={() => this.resetArray()}>Reset</button>
-                <button onClick={() => this.bubbleSortAnim()}>Bubble Sort</button>
+                <button onClick={() => this.sortAnim(bubbleSortSteps(this.state.arr))}>Bubble Sort</button>
+                <button onClick={() => this.sortAnim(insertionSortSteps(this.state.arr))}>Insertion Sort</button>
+                <button onClick={() => this.sortAnim(selectionSortSteps(this.state.arr))}>Selection Sort</button>
+                <button onClick={() => this.sortAnim(shellSortSteps(this.state.arr))}>Shell Sort</button>
+                <button onClick={() => this.sortAnim(mergeSortSteps(this.state.arr))}>Merge Sort</button>
             </div>
         )
     }
