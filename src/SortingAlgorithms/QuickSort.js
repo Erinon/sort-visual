@@ -1,8 +1,7 @@
 import { swap } from "../utils/utils"
 
-function partition(arr, l, h) {
+function partition(arr, l, h, steps) {
     var i = l - 1, j
-    const steps = []
 
     for (j = l; j <= h - 1; ++j) {
         steps.push([j, h, false])
@@ -22,33 +21,32 @@ function partition(arr, l, h) {
 
     swap(arr, i + 1, h)
 
-    return [i + 1, steps]
+    return i + 1
 }
 
-function quickSort(arr, l, h) {
+function quickSort(arr, l, h, steps) {
+    if (l < h) {
+        const p = partition(arr, l, h, steps)
+
+        quickSort(arr, l, p - 1, steps)
+        quickSort(arr, p + 1, h, steps)
+    }
+}
+
+export const quickSortSteps = array => {
     const steps = []
 
-    if (l < h) {
-        const [p, s] = partition(arr, l, h)
-
-        steps.push(...s)
-
-        steps.push(...quickSort(arr, l, p - 1))
-        steps.push(...quickSort(arr, p + 1, h))
-    }
+    quickSort(array.slice(), 0, array.length - 1, steps)
 
     return steps
 }
-
-export const quickSortSteps = array =>
-    quickSort(array.slice(), 0, array.length - 1)
 
 export const iterativeQuickSortSteps = array => {
     const arr = array.slice()
     const n = arr.length
     var l = 0, h = n - 1
     const stack = []
-    var p, s
+    var p
 
     const steps = []
 
@@ -59,9 +57,7 @@ export const iterativeQuickSortSteps = array => {
         h = stack.pop()
         l = stack.pop();
 
-        [p, s] = partition(arr, l, h)
-
-        steps.push(...s)
+        p = partition(arr, l, h, steps)
 
         if (p - 1 > l) {
             stack.push(l)

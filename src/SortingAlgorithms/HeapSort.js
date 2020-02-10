@@ -1,10 +1,8 @@
 import { swap } from "../utils/utils"
 
-function heapify(arr, n, i) {
+function heapify(arr, n, i, steps) {
     const l = 2 * i + 1, r = 2 * i + 2
     var largest = i
-
-    const steps = []
 
     if (l < n) {
         steps.push([l, largest, false])
@@ -28,10 +26,8 @@ function heapify(arr, n, i) {
 
         swap(arr, i, largest)
 
-        steps.push(...heapify(arr, n, largest))
+        heapify(arr, n, largest, steps)
     }
-
-    return steps
 }
 
 export const heapSortSteps = array => {
@@ -42,7 +38,7 @@ export const heapSortSteps = array => {
     const steps = []
 
     for (i = Math.floor(n / 2 - 1); i >= 0; --i) {
-        steps.push(...heapify(arr, n, i))
+        heapify(arr, n, i, steps)
     }
 
     for (i = n - 1; i >= 0; --i) {
@@ -51,7 +47,7 @@ export const heapSortSteps = array => {
 
         swap(arr, 0, i)
 
-        steps.push(...heapify(arr, i, 0))
+        heapify(arr, i, 0, steps)
     }
 
     return steps
