@@ -40,12 +40,8 @@ function quickSort(arr, l, h) {
     return steps
 }
 
-export const quickSortSteps = array => {
-    const arr = array.slice()
-    const n = arr.length
-
-    return quickSort(arr, 0, n - 1)
-}
+export const quickSortSteps = array =>
+    quickSort(array.slice(), 0, array.length - 1)
 
 export const iterativeQuickSortSteps = array => {
     const arr = array.slice()

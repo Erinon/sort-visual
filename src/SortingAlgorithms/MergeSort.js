@@ -56,7 +56,25 @@ function merge(arr, l, m, r) {
     return steps
 }
 
-export const mergeSortSteps = array => {
+function mergeSort(arr, l, r) {
+    const steps = []
+
+    if (l < r) {
+        const m = Math.floor(l + (r - l) / 2)
+
+        steps.push(...mergeSort(arr, l, m))
+        steps.push(...mergeSort(arr, m + 1, r))
+
+        steps.push(...merge(arr, l, m, r))
+    }
+
+    return steps
+}
+
+export const mergeSortSteps = array =>
+    mergeSort(array.slice(), 0, array.length - 1)
+
+export const iterativeMergeSortSteps = array => {
     const arr = array.slice()
     const n = arr.length
     var currSize, leftStart, mid, rightEnd
