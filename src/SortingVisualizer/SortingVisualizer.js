@@ -6,6 +6,7 @@ import { selectionSortSteps } from '../SortingAlgorithms/SelectionSort'
 import { shellSortSteps } from '../SortingAlgorithms/ShellSort'
 import { mergeSortSteps, iterativeMergeSortSteps } from '../SortingAlgorithms/MergeSort'
 import { quickSortSteps, iterativeQuickSortSteps } from '../SortingAlgorithms/QuickSort'
+import { heapSortSteps } from '../SortingAlgorithms/HeapSort'
 
 class SortingVisualizer extends React.Component {
     constructor(props) {
@@ -104,6 +105,7 @@ class SortingVisualizer extends React.Component {
                 <button onClick={() => this.sortAnim(iterativeMergeSortSteps(this.state.arr))}>Iterative Merge Sort</button>
                 <button onClick={() => this.sortAnim(quickSortSteps(this.state.arr))}>Quick Sort</button>
                 <button onClick={() => this.sortAnim(iterativeQuickSortSteps(this.state.arr))}>Iterative Quick Sort</button>
+                <button onClick={() => this.sortAnim(heapSortSteps(this.state.arr))}>Heap Sort</button>
             </div>
         )
     }
