@@ -1,10 +1,12 @@
 .arr-container {
-    width: 1300px;
+    width: 90%;
     height: 800px;
+    margin-left: 5%;
+    margin-right: 5%;
     display: flex;
     flex-wrap: nowrap;
 }
 
 .arr-bar {
-    background-color: pink;
+    background-color: #F2AA4CFF;
 }

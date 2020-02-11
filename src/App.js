@@ -5,7 +5,7 @@ import SortingVisualizer from './SortingVisualizer/SortingVisualizer';
 function App() {
   return (
     <div className="App">
-      <SortingVisualizer len={200}/>
+      <SortingVisualizer/>
     </div>
   );
 }

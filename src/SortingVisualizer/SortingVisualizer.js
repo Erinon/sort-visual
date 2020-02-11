@@ -1,111 +1,94 @@
 import React from 'react'
 import './SortingVisualizer.css'
-import { bubbleSortSteps } from '../SortingAlgorithms/BubbleSort'
-import { insertionSortSteps } from '../SortingAlgorithms/InsertionSort'
-import { selectionSortSteps } from '../SortingAlgorithms/SelectionSort'
-import { shellSortSteps } from '../SortingAlgorithms/ShellSort'
-import { mergeSortSteps, iterativeMergeSortSteps } from '../SortingAlgorithms/MergeSort'
-import { quickSortSteps, iterativeQuickSortSteps } from '../SortingAlgorithms/QuickSort'
-import { heapSortSteps } from '../SortingAlgorithms/HeapSort'
+import { DEAFULT_ARRAY_SIZE, DEFAULT_SPEED } from '../constants/constants'
+import NavigationBar from '../NavigationBar/NavigationBar'
+import { randomArray, sleep } from '../utils/utils'
 
 class SortingVisualizer extends React.Component {
     constructor(props) {
         super(props)
 
+        this.speed = DEFAULT_SPEED
+
         this.state = {
             arr: []
         }
     }
-
+    
     componentDidMount() {
-        this.resetArray()
+        this.resetArray(DEAFULT_ARRAY_SIZE)
     }
 
-    resetArray() {
-        const arr = this.randomArray(this.props.len)
-        this.setState({arr})
+    changeSize = (size) => {
+        this.resetArray(size)
     }
 
-    randomArray(size) {
-        return this.shuffle(Array.from(Array(size), (e, i) => 100 * (i + 1) / (size)))
+    changeSpeed = (speed) => {
+        this.speed = speed
     }
 
-    shuffle(arr) {
-        var j = 0
-        var temp = 0
+    resetArray = (size) =>
+        this.setState({
+            arr: randomArray(size)
+        })
 
-        for (let i = arr.length - 1; i > 0; --i) {
-            j = Math.floor(Math.random() * (i + 1))
-            temp = arr[i]
-            arr[i] = arr[j]
-            arr[j] = temp
-        }
+    async sortAnim(stepFun) {
+        const arr = this.state.arr
 
-        return arr
-    }
+        const t0 = performance.now()
+        const steps = stepFun(arr)
+        const t1 = performance.now()
 
-    sortAnim(steps) {
-        const {arr} = this.state
-        const arrBars = document.getElementsByClassName('arr-bar')
-        var iCol, jCol, cnt = 0
+        const algTime = t1 - t0
 
-        console.log(`${steps.length} steps`)
+        const stepNum = steps.length
         
-        steps.forEach(s => {
-            const [i, j, c] = s
+        const arrBars = document.getElementsByClassName('arr-bar')
+        var iCol, jCol, s
+
+        console.log(`${stepNum} steps`)
+        console.log(`${algTime} ms`)
+        
+        for (s = 0; s < stepNum; ++s) {
+            const [i, j, c] = steps[s]
 
             if (c) {
-                ++cnt;
-                setTimeout(() => {
-                    arr[i] = j
+                arr[i] = j
 
-                    arrBars[i].style.height = `${j}%`
-                }, cnt * 1)
+                await sleep(1)
+                arrBars[i].style.height = `${j}%`
             } else {
-                ++cnt;
-                setTimeout(() => {
-                    if (arr[i] > arr[j]) {
-                        iCol = 'green'
-                        jCol = 'red'
-                    } else {
-                        iCol = 'red'
-                        jCol = 'green'
-                    }
-    
-                    arrBars[i].style.backgroundColor = iCol
-                    arrBars[j].style.backgroundColor = jCol
-                }, cnt * 1)
+                if (arr[i] > arr[j]) {
+                    iCol = 'green'
+                    jCol = 'red'
+                } else {
+                    iCol = 'red'
+                    jCol = 'green'
+                }
+                
+                await sleep(1)
+                arrBars[i].style.backgroundColor = iCol
+                arrBars[j].style.backgroundColor = jCol
 
-                ++cnt;
-                setTimeout(() => {
-                    arrBars[i].style.backgroundColor = 'pink'
-                    arrBars[j].style.backgroundColor = 'pink'
-                }, cnt * 1)
+                await sleep(1)
+                arrBars[i].style.backgroundColor = '#f2AA4Cff'
+                arrBars[j].style.backgroundColor = '#f2AA4Cff'
             }
-        })
+        }
     }
 
     render() {
-        const len = this.props.len
+        const len = this.state.arr.length
 
         return (
             <div>
+                <NavigationBar handleSizeChange={this.changeSize} handleResetClick={this.resetArray} handleSpeedChange={this.changeSpeed} handleStartClick={a => this.sortAnim(a)}/>
+
                 <div className='arr-container'>
                     {this.state.arr.map((value, index) =>
                     <div className='arr-bar' key={index} style={{height: `${value}%`, width: `${100 / len}%`}}/>
                     )}
                 </div>
-                
-                <button onClick={() => this.resetArray()}>Reset</button>
-                <button onClick={() => this.sortAnim(bubbleSortSteps(this.state.arr))}>Bubble Sort</button>
-                <button onClick={() => this.sortAnim(insertionSortSteps(this.state.arr))}>Insertion Sort</button>
-                <button onClick={() => this.sortAnim(selectionSortSteps(this.state.arr))}>Selection Sort</button>
-                <button onClick={() => this.sortAnim(shellSortSteps(this.state.arr))}>Shell Sort</button>
-                <button onClick={() => this.sortAnim(mergeSortSteps(this.state.arr))}>Merge Sort</button>
-                <button onClick={() => this.sortAnim(iterativeMergeSortSteps(this.state.arr))}>Iterative Merge Sort</button>
-                <button onClick={() => this.sortAnim(quickSortSteps(this.state.arr))}>Quick Sort</button>
-                <button onClick={() => this.sortAnim(iterativeQuickSortSteps(this.state.arr))}>Iterative Quick Sort</button>
-                <button onClick={() => this.sortAnim(heapSortSteps(this.state.arr))}>Heap Sort</button>
             </div>
         )
     }
